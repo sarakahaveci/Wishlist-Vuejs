@@ -3,8 +3,8 @@
       <input class="todo-input" type="text" v-model="search" placeholder="Search in Wishlist"/>
 
     <input type="text" class="todo-input" placeholder="What Do You Want To Add?" v-model="newTodo" @keyup.enter="addTodo">
-    <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
-    <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
+    <transition-group name="fade" >
+    <div  v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
       <div class="todo-item-left">
         <input type="checkbox" v-model="todo.completed">
         <div v-if="!todo.editing" @dblclick="editTodo(todo)" class="todo-item-label" :class="{ completed : todo.completed }">{{ todo.title }}</div>
@@ -32,7 +32,7 @@ export default {
   name: 'todo-list',
   data () {
     return {
-      newTodo: [],
+      newTodo: "",
       search:'',
       idForTodo: 5,
       beforeEditCache: '',
@@ -70,22 +70,16 @@ export default {
     }
   },
   computed: {
+    todosFiltered: function(){
+      return this.todos.filter((todos)=>{
+        return todos.title.match(this.search);
+      })
+    },
     remaining() {
       return this.todos.filter(todo => !todo.completed).length
     },
     anyRemaining() {
       return this.remaining != 0
-    },
-    todosFiltered() {
-      if (this.filter == 'all') {
-        return this.todos
-      } else if (this.filter == 'active') {
-        return this.todos.filter(todo => !todo.completed)
-      } else if (this.filter == 'completed') {
-        return this.todos.filter(todo => todo.completed)
-      }
-
-      return this.todos
     },
     showClearCompletedButton() {
       return this.todos.filter(todo => todo.completed).length > 0
@@ -204,12 +198,6 @@ export default {
     font-size: 14px;
     background-color: white;
     appearance: none;
-  }
-  .active {
-    background: lightgreen;
-  }
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .2s;
   }
 
   .fade-enter, .fade-leave-to {
