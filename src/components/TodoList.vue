@@ -1,5 +1,7 @@
 <template>
   <div>
+      <input class="todo-input" type="text" v-model="search" placeholder="Search in Wishlist"/>
+
     <input type="text" class="todo-input" placeholder="What Do You Want To Add?" v-model="newTodo" @keyup.enter="addTodo">
     <transition-group name="fade" enter-active-class="animated fadeInUp" leave-active-class="animated fadeOutDown">
     <div v-for="(todo, index) in todosFiltered" :key="todo.id" class="todo-item">
@@ -30,8 +32,9 @@ export default {
   name: 'todo-list',
   data () {
     return {
-      newTodo: '',
-      idForTodo: 3,
+      newTodo: [],
+      search:'',
+      idForTodo: 5,
       beforeEditCache: '',
       filter: 'all',
       todos: [
